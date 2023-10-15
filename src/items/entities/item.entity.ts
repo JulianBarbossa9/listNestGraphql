@@ -18,9 +18,9 @@ export class Item {
   @Field(() => Float) //graphql
   quantity: number
   
-  @Column()//typeorm
-  @Field(() => String) //graphql
-  quantityUnits: string //gr, ml,kg, 
+  @Column({ nullable: true})//typeorm
+  @Field(() => String, { nullable: true}) //graphql
+  quantityUnits?: string //gr, ml,kg, 
 
   // stores
   // users
