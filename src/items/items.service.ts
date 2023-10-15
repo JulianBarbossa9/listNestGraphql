@@ -1,12 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { CreateItemInput, UpdateItemInput } from './dto/inputs';
 import { Item } from './entities/item.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class ItemsService {
+
+  //With this we can make a CRUD
+  constructor(
+    @InjectRepository(Item)
+    private readonly itemsRepository: Repository<Item>
+  ){}
   
   async create(createItemInput: CreateItemInput): Promise<Item> {
-    return 'This action adds a new item';
+    const newItem = this.itemsRepository.create( createItemInput )
+    await this.itemsRepository.save(newItem)
+    return newItem
   }
 
   findAll() {
