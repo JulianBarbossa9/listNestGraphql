@@ -11,6 +11,8 @@ type Item {
 
 type Query {
   items: [Item!]!
+
+  """Find a unique item"""
   findOneItem(id: ID!): Item!
 }
 
