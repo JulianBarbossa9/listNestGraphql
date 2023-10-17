@@ -40,7 +40,11 @@ export class ItemsService {
     return this.itemsRepository.save( item )
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} item`;
+  async remove(id: string): Promise<Item> {
+
+    const item = await this.findOne(id)
+    await this.itemsRepository.remove(item)
+    return {...item, id}//This a copy of the item deleted if we don't do that apperar a bad request in graphql becouse id is undefined
+
   }
 }
