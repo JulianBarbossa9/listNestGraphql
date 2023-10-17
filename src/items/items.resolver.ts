@@ -21,14 +21,18 @@ export class ItemsResolver {
     return this.itemsService.findAll();
   }
 
-  @Query(() => Item, { name: 'findOneItem' , description: 'Find a unique item'})
+  @Query(() => Item, { name: 'findOneItem', description: 'Find a unique item' })
   //With ParseUUIDPipe from nest we can validate if the id if is of type of uuid
-  async findOne(@Args('id', { type: () => ID }, ParseUUIDPipe ) id: string): Promise<Item>{
+  async findOne(
+    @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
+  ): Promise<Item> {
     return this.itemsService.findOne(id);
   }
 
   @Mutation(() => Item)
-  updateItem(@Args('updateItemInput') updateItemInput: UpdateItemInput) {
+  async updateItem(
+    @Args('updateItemInput') updateItemInput: UpdateItemInput,
+  ): Promise<Item> {
     return this.itemsService.update(updateItemInput.id, updateItemInput);
   }
 
