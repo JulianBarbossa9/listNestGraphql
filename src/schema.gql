@@ -9,6 +9,14 @@ type Item {
   quantityUnits: String
 }
 
+type User {
+  id: ID!
+  name: String!
+  username: String!
+  email: String!
+  password: String!
+}
+
 type Query {
   items: [Item!]!
 
@@ -20,6 +28,7 @@ type Mutation {
   createItem(createItemInput: CreateItemInput!): Item!
   updateItem(updateItemInput: UpdateItemInput!): Item!
   removeItem(id: ID!): Item!
+  createUser(createUser: CreateUserInput!): User!
 }
 
 input CreateItemInput {
@@ -33,4 +42,11 @@ input UpdateItemInput {
   quantity: Float
   quantityUnits: String
   id: ID!
+}
+
+input CreateUserInput {
+  name: String!
+  username: String!
+  email: String!
+  password: String!
 }
