@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
@@ -8,12 +8,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UsersService {
-
+  
+  //Sevice of log to show possible errors
+  private logger: Logger = new Logger('UsersService')
+  
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>
-  ){}
-  
+    ){}
+    
   async create( signupInput: SignUpInput): Promise<User> {
     try {
       
@@ -22,8 +25,9 @@ export class UsersService {
 
     } catch (error) {
       
-      console.log(error)
-      throw new BadRequestException('Something is wrong')
+      // console.log(error)
+      // throw new BadRequestException('Something is wrong')
+      this.handleDBErrors(error)
 
     }
   }
@@ -43,4 +47,16 @@ export class UsersService {
   async block(id: string): Promise<User> {
     throw new Error('FindOne not implemented');
   }
+
+  //Handle errors
+  //never means not reuturn anything
+
+  private handleDBErrors (error: any): never {
+    if (error === '23505'){
+      throw new BadRequestException( error.detail.replace('key', ''))
+    }
+    this.logger.error( error )
+    throw new InternalServerErrorException('Please check server logs')
+  }
+
 }
