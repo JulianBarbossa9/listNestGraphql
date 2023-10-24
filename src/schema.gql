@@ -28,7 +28,7 @@ type Query {
   """Find a unique item"""
   findOneItem(id: ID!): Item!
   users: [User!]!
-  user(id: ID!): User!
+  user(email: String!): User!
 }
 
 type Mutation {
@@ -37,6 +37,7 @@ type Mutation {
   removeItem(id: ID!): Item!
   blockUser(id: ID!): User!
   signup(signUpInput: SignUpInput!): AuthResponse!
+  login(loginInput: LoginInput!): AuthResponse!
 }
 
 input CreateItemInput {
@@ -55,5 +56,10 @@ input UpdateItemInput {
 input SignUpInput {
   email: String!
   fullName: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
   password: String!
 }
