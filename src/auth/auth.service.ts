@@ -23,7 +23,7 @@ export class AuthService {
     const userLogin = await this.usersSevice.findOneByEmail(email)//db password hash
     const token = 'ABC123'
 
-    //Compare password to come for input to password in db
+    //Compare the password coming from the input with the password in the database
     if( !bcrypt.compareSync( password, userLogin.password )){
       throw new BadRequestException('Email/Password is incorrect')
     }
