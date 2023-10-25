@@ -6,8 +6,9 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from 'src/users/entities/user.entity';
+import { ValidRoles } from './enums/valid-role.enums';
 
-@Resolver()
+@Resolver(() => AuthResolver)
 export class AuthResolver {
   
   constructor(
@@ -22,6 +23,7 @@ export class AuthResolver {
   ): Promise<AuthResponse> {
     return this.authService.signup(signUpInput)//call the signup this come of authservice
   }
+
   //Is recommend create this in a RESTfUL api traditional
   @Mutation(() => AuthResponse , { name: 'login'})
   async login(
@@ -35,7 +37,7 @@ export class AuthResolver {
   @UseGuards( JwtAuthGuard) //This input need a JWT
   revalidateToken(
     //We need the user id to revalidate token
-    @CurrentUser() user: User
+    @CurrentUser(/*[ ValidRoles.admin ]*/) user: User //@CurrentUser([ ValidRoles.admin ]) = This is a custom decorator and only people with role admin can make the query
   ) : AuthResponse{
     return this.authService.revalidateToken(user)
     
