@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
+import { ValidRolesArgs } from './dto/args/roles.args';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -11,8 +12,11 @@ export class UsersResolver {
   
 
   @Query(() => [User], { name: 'users' })
-  async findAll(): Promise<User[]> {
-    return [];
+  async findAll(
+    @Args() validRoles: ValidRolesArgs//ValidRolesArgs is of type array
+  ): Promise<User[]> {
+    // console.log({validRoles})
+    return this.usersService.findAll(validRoles.roles);//FindAll expect an array, and we send a validRoles.roles that is an array
   }
 
   @Query(() => User, { name: 'user' })
@@ -20,11 +24,7 @@ export class UsersResolver {
     return this.usersService.findOneByEmail(id);
   }
 
-  // @Mutation(() => User)
-  // updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
-  //   return this.usersService.update(updateUserInput.id, updateUserInput);
-  // }
-
+  
   @Mutation(() => User)
   async blockUser(@Args('id', { type: () => ID }) id: string): Promise<User> {
     return this.usersService.block(id);
