@@ -5,6 +5,7 @@ import { User } from './entities/user.entity';
 import { SignUpInput } from 'src/auth/dto/inputs/signup.input';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ValidRoles } from 'src/auth/enums/valid-role.enums';
 
 @Injectable()
 export class UsersService {
@@ -35,8 +36,16 @@ export class UsersService {
     }
   }
 
-  async findAll(): Promise<User[]> {
-    return [];
+  async findAll( roles?: ValidRoles[]): Promise<User[]> {
+    // return await this.usersRepository.find()//show all users
+   if (roles.length === 0) return await this.usersRepository.find()//show all users
+   
+   
+   //show users by roles
+   return this.usersRepository.createQueryBuilder()
+    .andWhere('ARRAY[roles] && ARRAY[:...roles]')//This is a postgresql query, where ARRAY[roles] is the column of the table(db) and ARRAY[:...roles] is the value that we send in graphql
+    .setParameter('roles', roles) // This is the value that we send in the query above
+    .getMany()//This is the result of the query
   }
 
   async findOneByEmail(email: string): Promise<User> {
