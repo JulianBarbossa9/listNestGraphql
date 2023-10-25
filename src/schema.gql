@@ -27,9 +27,16 @@ type Query {
 
   """Find a unique item"""
   findOneItem(id: ID!): Item!
-  users: [User!]!
+  users(roles: [ValidRoles!] = []): [User!]!
   user(email: String!): User!
   revalidate: AuthResponse!
+}
+
+"""This is are the only args allowed: user, admin, superUser"""
+enum ValidRoles {
+  user
+  admin
+  superUser
 }
 
 type Mutation {
