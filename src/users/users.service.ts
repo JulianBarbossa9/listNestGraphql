@@ -61,16 +61,24 @@ export class UsersService {
       const userExist = await this.usersRepository.findOneByOrFail({email})//This thorw the error is email not found
       return userExist
     } catch (error) {
-      // this.handleDBErrors({
-      //   code: 'error-001',
-      //   detail: `${email} not found`
-      // })
       throw new NotFoundException(`${email} not found`)
     }
   }
 
-  update(id: number, updateUserInput: UpdateUserInput) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserInput: UpdateUserInput, userUpdateBy: User ): Promise<User> {
+    try {
+      const user = await this.usersRepository.preload({
+        ...updateUserInput,
+        id
+      }) //Here we preload the user with the new values
+      
+      user.lastUpdatedBy = userUpdateBy
+      user.password = bcrypt.hashSync(updateUserInput.password, 9)
+
+      return await this.usersRepository.save(user)
+    } catch (error) {
+      this.handleDBErrors(error)
+    }
   }
 
   async block(id: string, adminUser: User): Promise<User> {
