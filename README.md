@@ -24,3 +24,5 @@ npm start:dev
 ```
 localhost:3000/graphql
 ```
+
+>Remember only that user have access can see the querys (add the jwt in headers => Bearer JWT)
