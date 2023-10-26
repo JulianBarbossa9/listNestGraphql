@@ -27,7 +27,7 @@ export const CurrentUser = createParamDecorator(
     }
     //If in the arg not come a role, then show this
     throw new ForbiddenException(
-      `User ${user.fullName} need a valid role, the current role is: ${roles} `
+      `User ${user.fullName} need a valid role, the current role is: ${user.roles} `
     )
 
 })
