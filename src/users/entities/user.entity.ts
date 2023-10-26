@@ -1,5 +1,5 @@
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'users'})
 @ObjectType()
@@ -39,6 +39,8 @@ export class User {
   isActive: boolean
 
   //TODO: Relationships
-
-
+  @ManyToOne(() => User, (user) => user.lastUpdatedBy, { nullable: true, onDelete: 'CASCADE', lazy: true }) //The lazy true is to avoid the circular dependency and is used when we have a relationship with the same entity
+  @JoinColumn({ name: 'lastUpdatedBy' })
+  @Field(() => User, { nullable: true })
+  lastUpdatedBy?: User
 }
