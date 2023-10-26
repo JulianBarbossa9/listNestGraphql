@@ -49,6 +49,9 @@ type Mutation {
 
   """Block user by Id """
   blockUser(id: ID!): User!
+
+  """Update user by Id"""
+  updateUser(updateUserInput: UpdateUserInput!): User!
   signup(signUpInput: SignUpInput!): AuthResponse!
   login(loginInput: LoginInput!): AuthResponse!
 }
@@ -64,6 +67,15 @@ input UpdateItemInput {
   quantity: Float
   quantityUnits: String
   id: ID!
+}
+
+input UpdateUserInput {
+  email: String
+  fullName: String
+  password: String
+  id: ID!
+  roles: [ValidRoles!]
+  isActive: Boolean
 }
 
 input SignUpInput {
