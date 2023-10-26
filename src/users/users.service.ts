@@ -38,7 +38,12 @@ export class UsersService {
 
   async findAll( roles?: ValidRoles[]): Promise<User[]> {
     // return await this.usersRepository.find()//show all users
-   if (roles.length === 0) return await this.usersRepository.find()//show all users
+   if (roles.length === 0) 
+    return await this.usersRepository.find({
+      // relations: {
+      //   lastUpdatedBy: true //This is the relationship with the user that update the user, we say that we want to show the user that update the user in the response
+      // } => This is the same as lazy: true in the entity
+    })//show all users
    
    
    //show users by roles
@@ -68,13 +73,17 @@ export class UsersService {
     return `This action updates a #${id} user`;
   }
 
-  async block(id: string): Promise<User> {
-    throw new Error('FindOne not implemented');
+  async block(id: string, adminUser: User): Promise<User> {
+    // throw new Error('FindOne not implemented');
+    const user = await this.findOneById(id)
+    if(!user) throw new NotFoundException(`User with id:${id} doen't exist`)
+    user.isActive = false //Change the value of false 
+    user.lastUpdatedBy = adminUser
+    return await this.usersRepository.save(user)
   }
 
   //Handle errors
-  //never means not reuturn anything
-
+  //never means not reuturn anything  
   private handleDBErrors (error: any): never {
     if (error === '23505'){
       throw new BadRequestException( error.detail.replace('key', ''))
@@ -94,5 +103,7 @@ export class UsersService {
       this.handleDBErrors(error)
     }
   }
+
+  
 
 }
