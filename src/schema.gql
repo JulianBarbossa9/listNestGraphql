@@ -15,6 +15,7 @@ type User {
   email: String!
   roles: [String!]!
   isActive: Boolean!
+  lastUpdatedBy: User
 }
 
 type AuthResponse {
@@ -28,7 +29,9 @@ type Query {
   """Find a unique item"""
   findOneItem(id: ID!): Item!
   users(roles: [ValidRoles!] = []): [User!]!
-  user(email: String!): User!
+
+  """Search a user by Id"""
+  user(id: ID!): User!
   revalidate: AuthResponse!
 }
 
@@ -43,6 +46,8 @@ type Mutation {
   createItem(createItemInput: CreateItemInput!): Item!
   updateItem(updateItemInput: UpdateItemInput!): Item!
   removeItem(id: ID!): Item!
+
+  """Block user by Id """
   blockUser(id: ID!): User!
   signup(signUpInput: SignUpInput!): AuthResponse!
   login(loginInput: LoginInput!): AuthResponse!
