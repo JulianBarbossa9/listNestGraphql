@@ -48,12 +48,14 @@ export class UsersResolver {
     return this.usersService.block(id, user);
   }
 
-  // @Mutation(() => User)
-  // async updateRole(
-  //   @Args('id', { type: () => ID }) id: string,
-  // ): Promise<User> {
-  //   return this.usersService.updateRole(id);
-  // }
+  @Mutation(() => User, {name: 'updateUser', description: 'Update user by Id'})
+  async updateUser(
+    // @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
+    @Args('updateUserInput') updateUserInput: UpdateUserInput,
+    @CurrentUser([ValidRoles.admin]) user: User
+  ): Promise<User> {
+    return this.usersService.update(updateUserInput.id, updateUserInput, user)
+  }
 
   
 }
