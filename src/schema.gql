@@ -24,15 +24,15 @@ type AuthResponse {
 }
 
 type Query {
-  items: [Item!]!
-
-  """Find a unique item"""
-  findOneItem(id: ID!): Item!
+  revalidate: AuthResponse!
   users(roles: [ValidRoles!] = []): [User!]!
 
   """Search a user by Id"""
   user(id: ID!): User!
-  revalidate: AuthResponse!
+  items: [Item!]!
+
+  """Find a unique item"""
+  findOneItem(id: ID!): Item!
 }
 
 """This is are the only args allowed: user, admin, superUser"""
@@ -43,17 +43,37 @@ enum ValidRoles {
 }
 
 type Mutation {
-  createItem(createItemInput: CreateItemInput!): Item!
-  updateItem(updateItemInput: UpdateItemInput!): Item!
-  removeItem(id: ID!): Item!
+  signup(signUpInput: SignUpInput!): AuthResponse!
+  login(loginInput: LoginInput!): AuthResponse!
 
   """Block user by Id """
   blockUser(id: ID!): User!
 
   """Update user by Id"""
   updateUser(updateUserInput: UpdateUserInput!): User!
-  signup(signUpInput: SignUpInput!): AuthResponse!
-  login(loginInput: LoginInput!): AuthResponse!
+  createItem(createItemInput: CreateItemInput!): Item!
+  updateItem(updateItemInput: UpdateItemInput!): Item!
+  removeItem(id: ID!): Item!
+}
+
+input SignUpInput {
+  email: String!
+  fullName: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input UpdateUserInput {
+  email: String
+  fullName: String
+  password: String
+  id: ID!
+  roles: [ValidRoles!]
+  isActive: Boolean
 }
 
 input CreateItemInput {
@@ -67,24 +87,4 @@ input UpdateItemInput {
   quantity: Float
   quantityUnits: String
   id: ID!
-}
-
-input UpdateUserInput {
-  email: String
-  fullName: String
-  password: String
-  id: ID!
-  roles: [ValidRoles!]
-  isActive: Boolean
-}
-
-input SignUpInput {
-  email: String!
-  fullName: String!
-  password: String!
-}
-
-input LoginInput {
-  email: String!
-  password: String!
 }
