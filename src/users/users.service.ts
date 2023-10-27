@@ -73,7 +73,8 @@ export class UsersService {
       }) //Here we preload the user with the new values
       
       user.lastUpdatedBy = userUpdateBy
-      user.password = bcrypt.hashSync(updateUserInput.password, 9)
+      // user.password = bcrypt.hashSync(updateUserInput.password, 9)
+      !user.password ? user.password = bcrypt.hashSync(updateUserInput.password, 9) : null //If the password is not change, the password is not update  
 
       return await this.usersRepository.save(user)
     } catch (error) {
